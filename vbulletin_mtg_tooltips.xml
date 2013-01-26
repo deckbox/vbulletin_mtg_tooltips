@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<product productid="vbulletin_mtg_tooltips" active="1">
+  <title>Magic the Gathering Card Tooltips</title>
+  <description>Shows card tooltips for MtG cards that link to deckbox.org. Also provides a bbcode to facilitate this process.</description>
+  <version>0.0.2</version>
+  <url>https://github.com/SebastianZaha/vbulletin_mtg_tooltips</url>
+  <dependencies></dependencies>
+  <codes>
+    <code version="*">
+    </code>
+  </codes>
+  <templates></templates>
+  <plugins>
+    
+    <plugin active="1" executionorder="5">
+      <title>deckbox.org functions</title>
+      <hookname>bbcode_fetch_tags</hookname>
+      <phpcode><![CDATA[
+        function handle_deckbox_tag($parser, $value) {
+            $cards = preg_split("/<br ?\/>/", $value);
+            foreach($cards as &$card) {
+                $card = trim($card);
+                preg_match('/([\s0-9-]*)(.*)/', $card, $bits);
+                $card = $bits[1].'<a href="http://deckbox.org/mtg/'.$bits[2].'">'.$bits[2].'</a>';
+            }
+            return implode("<br />", $cards);
+        }
+
+        $tag_list['no_option']['cards'] = array(
+            'callback' => 'handle_external',
+            'external_callback' => 'handle_deckbox_tag', 
+            'disable_smilies' => true,
+            'title' => '',
+            'disable_wordwrap' => true);
+      ]]></phpcode>
+    </plugin>
+
+    <plugin active="1" executionorder="5">
+      <title>deckbox.org button</title>
+      <hookname>editor_toolbar_end</hookname>
+      <phpcode><![CDATA[
+        $vBeditTemplate["extrabuttons"] .= '<td><div class="imagebutton" id="' . $editorid . 
+            '_cmd_wrap0_cards"><img src="http://deckbox.org/images/icons/mtg.png" title="Wrap [cards] tags around selected text" /></div></td>';
+      ]]></phpcode>
+    </plugin>
+
+    <plugin active="1" executionorder="65535">
+      <title>deckbox.org show cards unparsed in wysiwyg</title>
+      <hookname>bbcode_create</hookname>
+      <phpcode><![CDATA[
+        if ($this->is_wysiwyg()) {
+            $this->unparsed_tags[] = 'cards';
+        }
+      ]]></phpcode>
+    </plugin>
+
+    <plugin active="1" executionorder="5">
+      <title>deckbox.org javascript</title>
+      <hookname>global_start</hookname>
+      <phpcode><![CDATA[
+          $jscode = '\n<script src=\"http://deckbox.org/javascripts/bin/tooltip.js\" type=\"text/javascript\"></script>';
+          $position = '<!-- / CSS Stylesheet -->';
+          $vbulletin->templatecache['headinclude'] = str_replace($position, $position.$jscode, $vbulletin->templatecache['headinclude']);
+      ]]></phpcode>
+    </plugin>
+
+  </plugins>
+  <phrases></phrases>
+  <options></options>
+  <helptopics></helptopics>
+  <cronentries></cronentries>
+  <faqentries></faqentries>
+</product>
