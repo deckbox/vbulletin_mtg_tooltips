@@ -3,7 +3,7 @@
 <product productid="vbulletin_mtg_tooltips" active="1">
   <title>Magic the Gathering Card Tooltips</title>
   <description>Shows card tooltips for MtG cards that link to deckbox.org. Also provides a bbcode to facilitate this process.</description>
-  <version>0.0.2</version>
+  <version>0.1.0</version>
   <url>https://github.com/SebastianZaha/vbulletin_mtg_tooltips</url>
   <dependencies></dependencies>
   <codes>
