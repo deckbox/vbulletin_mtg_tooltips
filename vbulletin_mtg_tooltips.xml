@@ -65,6 +65,16 @@
       ]]></phpcode>
     </plugin>
 
+    <plugin active="1" executionorder="5">
+      <title>deckbox.org javascript v4</title>
+      <hookname>global_bootstrap_init_start</hookname>
+      <phpcode><![CDATA[
+          $jscode = '\n<script src=\"http://deckbox.org/javascripts/bin/tooltip.js\" type=\"text/javascript\"></script>';
+          $position = '<!-- / CSS Stylesheet -->';
+          $vbulletin->templatecache['headinclude'] = str_replace($position, $position.$jscode, $vbulletin->templatecache['headinclude']);
+      ]]></phpcode>
+    </plugin>
+
   </plugins>
   <phrases></phrases>
   <options></options>
